@@ -1,0 +1,66 @@
+# $Id: PKGBUILD 201517 2013-12-13 19:09:52Z ronald $
+# Maintainer: Ronald van Haren <ronald@archlinux.org>
+# Contributor: Gustavo Sverzut Barbieri <barbieri@gmail.com>
+
+pkgname=enlightenment
+_pkgname=enlightenment
+pkgver=0.18.2
+pkgrel=1
+pkgdesc="Enlightenment window manager DR18 (aka e18)"
+arch=('i686' 'x86_64')
+url="http://www.enlightenment.org"
+license=('BSD')
+depends=('alsa-lib' 'pam' 'shared-mime-info' 'hicolor-icon-theme'
+	 'desktop-file-utils' 'efl' 'elementary' 'xcb-util-keysyms' 
+	 'udisks' 'systemd' 'ttf-font' 'e_dbus')
+optdepends=('connman: network module')
+provides=('notification-daemon')
+backup=('etc/enlightenment/sysactions.conf')
+options=('!emptydirs')
+install=enlightenment.install
+source=(http://download.enlightenment.org/rel/apps/enlightenment/$_pkgname-$pkgver.tar.gz)
+sha1sums=('e293108b8c5d6c7643ea868550763c9e8e0d6d08')
+	
+prepare() {
+  #cd "$srcdir/$_pkgname-$pkgver"
+  #patch -p0 < $srcdir/quickstart.patch
+
+  # default to systemd for sysactions
+  #patch -Np0 < $srcdir/sysactions_systemd.patch
+  echo "no prepare()"
+}
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  #export CFLAGS="$CFLAGS -fvisibility=hidden"
+
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib/enlightenment  \
+    --disable-static \
+    --enable-pam \
+    --disable-device-hal \
+    --enable-device-udev \
+    --enable-mount-udisks \
+    --enable-mount-eeze \
+    --enable-enotify \
+    --disable-conf-wallpaper2 \
+    --disable-illume2 \
+    --disable-doc
+  make
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  make DESTDIR=${pkgdir} install
+
+  # install license files
+    install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/COPYING" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+
+  # install a default applications.menu file (mostly copy from gnome-menus)
+  #install -Dm644 $srcdir/e-applications.menu $pkgdir/etc/xdg/menus/e-applications.menu
+}
+
