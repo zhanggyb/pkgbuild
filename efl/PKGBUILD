@@ -4,7 +4,7 @@
 
 pkgbase=efl
 pkgname=('efl' 'efl-docs')
-pkgver=1.8.3
+pkgver=1.8.4
 pkgrel=1
 pkgdesc="Enlightenment Foundation Libraries"
 arch=('i686' 'x86_64')
@@ -21,7 +21,7 @@ replaces=('ecore' 'edje' 'eet' 'eeze' 'efreet' 'eina' 'eio' 'embryo'
 options=('!emptydirs')
 source=(http://download.enlightenment.org/rel/libs/${pkgname}/$pkgname-$pkgver.tar.gz)
 install=efl.install
-sha1sums=('c3e24a3b8c3767fada0b5795602570c6a4d485aa')
+sha1sums=('48f8c82931153eef23ad9e694be4ed8f7ba857a1')
 
 prepare() {
   sed -i 's/env python$/&2/' "${srcdir}/${pkgname}-${pkgver}/src/scripts/eina/eina-bench-cmp"
